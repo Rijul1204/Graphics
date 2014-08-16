@@ -1,0 +1,17 @@
+.*
+!.gitignore
+*.ipr
+*.iws
+*.iml
+idea
+target
+build
+out
+*.opt
+*.plg
+*.dsp
+*.dsw
+*.ncb
+*.opt
+*.plg
+Debug

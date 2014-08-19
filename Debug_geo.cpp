@@ -94,6 +94,20 @@ void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glC(1.0, 1.0,.5);	
+
+	glBegin( GL_POINTS );
+	glColor3f(1,0,0);
+	
+	int i,j;
+
+	for(i=0;i<=100;i++){
+		for(j=0;j<=100;j++){		
+			glVertex2d( i,j);
+		}
+	}
+	
+	glEnd();
+
 	
 	//glTranslatef(-100,-100,0);
 	glScalef(35,35,1);
@@ -103,7 +117,7 @@ void display(void)
 	draw_circle(circle(s,.03));
 	draw_circle(circle(d,.03));
 
-	for(int i=1;i<=n;i++){
+	for(i=1;i<=n;i++){
 		draw_rect(rects[i]);
 	}
 

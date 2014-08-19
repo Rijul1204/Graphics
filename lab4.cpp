@@ -110,6 +110,7 @@ void display(void)
 
 	glFlush();
 }
+
 void drawPixel(int x,int y)
 {
 	glPointSize(3);

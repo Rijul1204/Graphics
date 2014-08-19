@@ -156,14 +156,6 @@ void draw_line(int x0,int y0,int x1,int y1){
 void lines(){
 
 	int x,y;
-	int ang1=ang;
-
-	for(i=0;i<8;i++,ang1+=45){
-		ang1%=360;
-		x=acos(
-		
-	}
-	
-	
+	int ang1=ang;	
 
 }

@@ -263,7 +263,7 @@ void convert2(float &x){
 	double alpha=.2,beta=2,gamma=1;
 
 	if(x<a){
-		0;
+		x=0;
 		return ;
 	}
 	else if(x<=b){
@@ -285,7 +285,7 @@ void mainmenu(){ /// have to change the color (sajid)
 
 	for(int i=0;i<=100;i++){
 		for(int j=0;j<=100;j++){		
-			glVertex2d( i,j);
+		//	glVertex2d( i,j);
 		}
 	}
 	
@@ -368,22 +368,28 @@ void mainmenu(){ /// have to change the color (sajid)
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glC(1.0, 1.0,.5);
-
+	
 	glBegin( GL_POINTS );
-	glColor3f(1,0,0);
-
+	
 	int i,j;
 
 	for(i=0;i<=100;i++){
 		for(j=0;j<=100;j++){
-			glVertex2d( i,j);
+			//glColor3f(4.65,4.56,4.3);
+			//glVertex2d( i,j);
 		}
 	}
 
 	glEnd();
 
+	
+
 	mainmenu();
+
+		glFlush();
+	glutSwapBuffers();
+
+	return ;
 
 
 	//glTranslatef(-100,-100,0);
@@ -401,8 +407,7 @@ void display(void)
 
 	// ..........................
 
-	glFlush();
-	glutSwapBuffers();
+
 }
 
 void reshape(int w, int h)
@@ -433,7 +438,7 @@ int main(int argc, char** argv)
 {
 	freopen("out.txt","w",stdout);
 
-    BMPLoad("Lena512.bmp",menu5);
+    BMPLoad("menu.bmp",menu5);
 
 	glutInit(&argc, argv);
 	init ();

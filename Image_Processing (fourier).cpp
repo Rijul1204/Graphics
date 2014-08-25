@@ -4,7 +4,7 @@
 #include <math.h>
 #include "bmploader.h"
 
-#define maxm 1050
+#define maxm 500
 #define pi  acos(-1.0)
 #define M_PI pi
 #define glC(a,b,c) glColor3f(a,b,c)
@@ -14,9 +14,13 @@
 #define iseq(a,b) (fabs(a-b)<eps)
 
 ii f_real[maxm][maxm],f_img[maxm][maxm];
+
 ii P_real[maxm][maxm],P_img[maxm][maxm];
+
 ii F_real[maxm][maxm],F_img[maxm][maxm];
-ii ff_real[maxm][maxm],ff_img[maxm][maxm];
+ii F_real1[maxm][maxm],F_img1[maxm][maxm];
+ii F_real2[maxm][maxm],F_img2[maxm][maxm];
+ii F_real3[maxm][maxm],F_img3[maxm][maxm];
 
 //Code a texture  mapping . . . .
 
@@ -165,71 +169,26 @@ BMPError BMPLoadGL(std::string fname)
 }
 #endif
 
-BMPClass menu5,pic;
+BMPClass pic1,pic2,pic3,pic4;
 
 // Texture mapping code finish . . .
 
-int print_flag=0;
+void image_print2();
+void image_print3();
+void image_print4();
 
-void convert1(float &x){
+void image_print1(){
 
-	int L=255,a=50,b=150,ya=30,yb=200;
-	double alpha=.2,beta=2,gamma=1;
-
-	if(x<a){
-		x*=alpha;
-		return ;
-	}
-	else if(x<=b){
-		x=(beta*(x-a))+ya;
-	}
-	else{
-		x=gamma*(x-b)+yb;
-	}
-}
-
-void convert2(float &x){
-
-	int L=255,a=50,b=150,ya=30,yb=200;
-	double alpha=.2,beta=2,gamma=1;
-
-	if(x<a){
-		x=0;
-		return ;
-	}
-	else if(x<=b){
-		x=(beta*(x-a));
-	}
-	else{
-		x=beta*(b-a);
-	}
-}
-
-void image_print(){
-
-	//puts("MainMenu");
-	
-	glColor3f(0,0,0);
-
-	glPushMatrix();
-    glLoadIdentity();
-	glTranslatef(-512,0,0);
-
-	//texture maping of left field
-	int r,c,r1;
-	double p1,c1;
-
-	for(r=0;r<menu5.width;r++)
+	int r,c;	
+	for(r=0;r<pic1.width;r++)
 	{
-	  for(c=0;c<menu5.height;c++)
+	  for(c=0;c<pic1.height;c++)
 	  {
 		  glBegin(GL_POINTS);
 
-		  float rr=(float)(menu5.pixel(r,c,0));
-		  float gg=(float)(menu5.pixel(r,c,1));
-		  float bb=(float)(menu5.pixel(r,c,2));
-
-		  if(print_flag && c<30 && r<30) printf("%3.0f,%3.0f,%3.0f,  ",rr,gg,bb);
+		  float rr=(float)(pic1.pixel(r,c,0));
+		  float gg=(float)(pic1.pixel(r,c,1));
+		  float bb=(float)(pic1.pixel(r,c,2));
 
 		  glColor3f(rr/255,gg/255.0,bb/255.0);
 
@@ -237,25 +196,13 @@ void image_print(){
 
 		  glEnd();
 	  }
-	  if(print_flag && r<=30) puts("");
 	}
 
-	if(print_flag){
-		printf("width= %d  height= %d\n",r,c);
-	}
+	glTranslatef(0,-250,0);
 
-	
-
-	glPopMatrix();
-
-
-	glPushMatrix();
-    glLoadIdentity();
-	glTranslatef(0,0,0);
-
-	for(r=0;r<menu5.width;r++)
+	for(r=0;r<pic1.width;r++)
 	{
-	  for(c=0;c<menu5.height;c++)
+	  for(c=0;c<pic1.height;c++)
 	  {
 		  glBegin(GL_POINTS);
 
@@ -265,74 +212,17 @@ void image_print(){
 		  magn=sqrt(magn);
 
 		  float rr=(float)magn;
-
-		  //convert2(rr);
-		  
 		  rr/=255.0;
 
-		  if(print_flag && c<30 && r<30){
-			  printf("%.4lf ",rr);
-		  }
-
-		  
-		  
-		    
-		  //if(rr>1.0){
-		  //  glEnd();
-		//	  continue;
-		  //}
-
 		  glColor3f(rr,rr,rr);
-
 		  glVertex2d(r,c);
 
 		  glEnd();
 	  }
-	  if(print_flag && r<=30){
-		  puts("");
-	  }
-
 	}
+	
+	glTranslatef(0,250,0);
 
-	glPopMatrix();
-
-	print_flag=0;
-
-
-	glPushMatrix();
-    glLoadIdentity();
-	glTranslatef(-512,-512,0);
-
-	for(r=0;r<menu5.width;r++)
-	{
-	  for(c=0;c<menu5.height;c++)
-	  {
-		  glBegin(GL_POINTS);
-
-		  double magn=(ff_real[r][c]*ff_real[r][c]);
-		  magn+=(ff_img[r][c]*ff_img[r][c]);
-		  magn=sqrt(magn);
-
-		  float rr=(float)magn;
-		  
-		  rr/=255.0;
-		  
-		  
-		  //if(rr>1.0){
-		  //  glEnd();
-		//	  continue;
-		  //}
-
-		  glColor3f(rr,rr,rr);
-
-		  glVertex2d(r,c);
-
-		  glEnd();
-	  }
-
-	}
-
-	glPopMatrix();
 
 }
 
@@ -341,24 +231,24 @@ void display(void)
 {
 
 	glClear(GL_COLOR_BUFFER_BIT);
-	glC(1.0, 1.0,.5);
+	glC(1.0, 1.0,.5);	
+	
+	glPushMatrix();
+    glLoadIdentity();
+	glTranslatef(-300,50,0);
+	
+	image_print1();
+	
+	glTranslatef(150,0,0);
+	image_print2();	
+	
+	glTranslatef(150,0,0);
+	image_print3();	
+	
+	glTranslatef(150,0,0);
+	image_print4();
 
-	//glBegin( GL_POINTS );
-	//glColor3f(1,0,0);
-
-	int i,j;
-
-	for(i=0;i<=100;i++){
-		for(j=0;j<=100;j++){
-			//glVertex2d( i,j);
-		}
-	}
-
-	//glEnd();
-
-	image_print();
-
-	// ..........................
+	glPopMatrix();
 
 	glFlush();
 	glutSwapBuffers();
@@ -381,81 +271,35 @@ void init(void)
 	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition (100, 100);
 	glutCreateWindow ("Testing");
-
 }
 
+void fourier_transform2();
+void fourier_transform3();
+void fourier_transform4();
 
-/*
- * Computes the discrete Fourier transform (DFT) of the given vector.
- * All the array arguments must have the same length.
- */
-void compute_dft(double inreal[], double inimag[], double outreal[], double outimag[], int n) {
-	int k;
-	for (k = 0; k < n; k++) {  /* For each output element */
-		double sumreal = 0;
-		double sumimag = 0;
-		int t;
-		for (t = 0; t < n; t++) {  /* For each input element */
-			double angle = 2 * M_PI * t * k / n;
-			sumreal +=  inreal[t] * cos(angle) + inimag[t] * sin(angle);
-			sumimag += -inreal[t] * sin(angle) + inimag[t] * cos(angle);
-		}
-		outreal[k] = sumreal;
-		outimag[k] = sumimag;
-	}
-}
 
-void fourier_transform();
-
-int main(int argc, char** argv)
-{
-	//freopen("out.txt","w",stdout);
-	freopen("in.txt","r",stdin);
-
-    BMPLoad("lena1.bmp",menu5);
-    BMPLoad("lena1.bmp",pic);
-
-	glutInit(&argc, argv);
-	init ();
-
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-
-	fourier_transform();
-
-	// take input . . .
-
-	glutMainLoop();
-
-	return 0;
-}
-
-void fourier_transform(){
+void fourier_transform1(){
 
 	int i,j,n,m,k,l;
 
 	// take input . . .  f(i,j)
-
-	n=pic.height;
-	m=pic.width;
-
-	for(i=0;i<pic.height;i++)
+	n=pic1.height;
+	m=pic1.width;
+	for(i=0;i<pic1.height;i++)
 	{
-	  for(j=0;j<pic.width;j++)
+	  for(j=0;j<pic1.width;j++)
 	  {
-		  float rr=(float)(menu5.pixel(i,j,0));
+		  float rr=(float)(pic1.pixel(i,j,0));
 		  f_real[i][j]=rr;
 		  f_img[i][j]=0;
 		  if((i+j)%2){
 			f_real[i][j]=-rr;
 			f_img[i][j]=-0;
 		  }
-	  }
-	
+	  }	
 	}
 
 	// calculating . . .  P(i,j);
-
 	for(j=0;j<m;j++){
 		int k;
 		for (k = 0; k < n; k++) {  /* For each output element */
@@ -470,11 +314,9 @@ void fourier_transform(){
 			P_real[k][j] = sumreal;
 			P_img[k][j] = sumimag;
 		}
-		printf("j= %d\n",j);
 	}
 
 	// taking Input . . .  F(i,j);
-
 	for(i=0;i<n;i++){
 		int k;
 		for (k = 0; k < m; k++) {  /* For each output element */
@@ -489,28 +331,63 @@ void fourier_transform(){
 			F_real[i][k] = sumreal/(double)m;
 			F_img[i][k] = sumimag/(double)m;
 		}
-		printf("i= %d\n",i);
+	}
+	puts("FINISH");	
+
+	return ;
+}
+
+
+int main(int argc, char** argv)
+{
+	//freopen("out.txt","w",stdout);
+	freopen("in.txt","r",stdin);
+
+    BMPLoad("sin1.bmp",pic1);
+    BMPLoad("sin3.bmp",pic2);
+    BMPLoad("sin5.bmp",pic3);
+    BMPLoad("sin7.bmp",pic4);
+
+	glutInit(&argc, argv);
+	init ();
+
+	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
+	
+	// Fourier Transform . . . . . .
+	fourier_transform1();
+	fourier_transform2();
+	fourier_transform3();
+	fourier_transform4();
+
+	glutMainLoop();
+
+	return 0;
+}
+
+
+void fourier_transform2(){
+
+	int i,j,n,m,k,l;
+
+	// take input . . .  f(i,j)
+	n=pic2.height;
+	m=pic2.width;
+	for(i=0;i<pic2.height;i++)
+	{
+	  for(j=0;j<pic2.width;j++)
+	  {
+		  float rr=(float)(pic2.pixel(i,j,0));
+		  f_real[i][j]=rr;
+		  f_img[i][j]=0;
+		  if((i+j)%2){
+			f_real[i][j]=-rr;
+			f_img[i][j]=-0;
+		  }
+	  }	
 	}
 
-	/*for(i=0;i<pic.height;i++)
-	{
-	  for(j=0;j<pic.width;j++)
-	  {
-		  float rr=(float)(menu5.pixel(i,j,0));
-		  float gg=(float)(menu5.pixel(i,j,1));
-		  float bb=(float)(menu5.pixel(i,j,2));
-		  F_real[i][j]=rr;
-		  F_img[i][j]=0;
-		  if(!iseq(rr,0) && !iseq(gg,0) && !iseq(bb,0)) {
-			  puts("Here");
-		  }
-	  }
-	
-	}*/
-	
-	
 	// calculating . . .  P(i,j);
-
 	for(j=0;j<m;j++){
 		int k;
 		for (k = 0; k < n; k++) {  /* For each output element */
@@ -519,17 +396,15 @@ void fourier_transform(){
 			int t;
 			for (t = 0; t < n; t++) {  /* For each input element */
 				double angle = 2 * M_PI * t * k / (double)n;
-				sumreal +=  F_real[t][j] * cos(angle) - F_img[t][j] * sin(angle);
-				sumimag += F_real[t][j] * sin(angle) + F_img[t][j] * cos(angle);
+				sumreal +=  f_real[t][j] * cos(angle) + f_img[t][j] * sin(angle);
+				sumimag += -f_real[t][j] * sin(angle) + f_img[t][j] * cos(angle);
 			}
-			P_real[k][j] = sumreal/(double)(n);
-			P_img[k][j] = sumimag/(double)(n);		
+			P_real[k][j] = sumreal;
+			P_img[k][j] = sumimag;
 		}
-		printf("j= %d\n",j);
 	}
 
 	// taking Input . . .  F(i,j);
-
 	for(i=0;i<n;i++){
 		int k;
 		for (k = 0; k < m; k++) {  /* For each output element */
@@ -538,44 +413,279 @@ void fourier_transform(){
 			int t;
 			for (t = 0; t < m; t++) {  /* For each input element */
 				double angle = 2 * M_PI * t * k / (double)n;
-				sumreal +=  P_real[i][t] * cos(angle) - P_img[i][t] * sin(angle);
-				sumimag += P_real[i][t] * sin(angle) + P_img[i][t] * cos(angle);
+				sumreal +=  P_real[i][t] * cos(angle) + P_img[i][t] * sin(angle);
+				sumimag += -P_real[i][t] * sin(angle) + P_img[i][t] * cos(angle);
 			}
-			ff_real[i][k] = sumreal;
-			ff_img[i][k] = sumimag;
+			F_real1[i][k] = sumreal/(double)m;
+			F_img1[i][k] = sumimag/(double)m;
 		}
-		printf("i= %d\n",i);
 	}
+
+	puts("FINISH");	
+
+	return ;
+}
+
+
+void fourier_transform3(){
+
+	int i,j,n,m,k,l;
+
+	// take input . . .  f(i,j)
+	n=pic3.height;
+	m=pic3.width;
+	for(i=0;i<pic3.height;i++)
+	{
+	  for(j=0;j<pic3.width;j++)
+	  {
+		  float rr=(float)(pic3.pixel(i,j,0));
+		  f_real[i][j]=rr;
+		  f_img[i][j]=0;
+		  if((i+j)%2){
+			f_real[i][j]=-rr;
+			f_img[i][j]=-0;
+		  }
+	  }	
+	}
+
+	// calculating . . .  P(i,j);
+	for(j=0;j<m;j++){
+		int k;
+		for (k = 0; k < n; k++) {  /* For each output element */
+			double sumreal = 0;
+			double sumimag = 0;
+			int t;
+			for (t = 0; t < n; t++) {  /* For each input element */
+				double angle = 2 * M_PI * t * k / (double)n;
+				sumreal +=  f_real[t][j] * cos(angle) + f_img[t][j] * sin(angle);
+				sumimag += -f_real[t][j] * sin(angle) + f_img[t][j] * cos(angle);
+			}
+			P_real[k][j] = sumreal;
+			P_img[k][j] = sumimag;
+		}
+	}
+
+	// taking Input . . .  F(i,j);
+	for(i=0;i<n;i++){
+		int k;
+		for (k = 0; k < m; k++) {  /* For each output element */
+			double sumreal = 0;
+			double sumimag = 0;
+			int t;
+			for (t = 0; t < m; t++) {  /* For each input element */
+				double angle = 2 * M_PI * t * k / (double)n;
+				sumreal +=  P_real[i][t] * cos(angle) + P_img[i][t] * sin(angle);
+				sumimag += -P_real[i][t] * sin(angle) + P_img[i][t] * cos(angle);
+			}
+			F_real2[i][k] = sumreal/(double)m;
+			F_img2[i][k] = sumimag/(double)m;
+		}
+	}
+	puts("FINISH");	
+
+	return ;
+}
+
+
+void fourier_transform4(){
+
+	int i,j,n,m,k,l;
+
+	// take input . . .  f(i,j)
+	n=pic4.height;
+	m=pic4.width;
+	for(i=0;i<pic4.height;i++)
+	{
+	  for(j=0;j<pic4.width;j++)
+	  {
+		  float rr=(float)(pic4.pixel(i,j,0));
+		  f_real[i][j]=rr;
+		  f_img[i][j]=0;
+		  if((i+j)%2){
+			f_real[i][j]=-rr;
+			f_img[i][j]=-0;
+		  }
+	  }	
+	}
+
+	// calculating . . .  P(i,j);
+	for(j=0;j<m;j++){
+		int k;
+		for (k = 0; k < n; k++) {  /* For each output element */
+			double sumreal = 0;
+			double sumimag = 0;
+			int t;
+			for (t = 0; t < n; t++) {  /* For each input element */
+				double angle = 2 * M_PI * t * k / (double)n;
+				sumreal +=  f_real[t][j] * cos(angle) + f_img[t][j] * sin(angle);
+				sumimag += -f_real[t][j] * sin(angle) + f_img[t][j] * cos(angle);
+			}
+			P_real[k][j] = sumreal;
+			P_img[k][j] = sumimag;
+		}
+	}
+
+	// taking Input . . .  F(i,j);
+	for(i=0;i<n;i++){
+		int k;
+		for (k = 0; k < m; k++) {  /* For each output element */
+			double sumreal = 0;
+			double sumimag = 0;
+			int t;
+			for (t = 0; t < m; t++) {  /* For each input element */
+				double angle = 2 * M_PI * t * k / (double)n;
+				sumreal +=  P_real[i][t] * cos(angle) + P_img[i][t] * sin(angle);
+				sumimag += -P_real[i][t] * sin(angle) + P_img[i][t] * cos(angle);
+			}
+			F_real3[i][k] = sumreal/(double)m;
+			F_img3[i][k] = sumimag/(double)m;
+		}
+	}
+
+	puts("FINISH");
 	
 
 	return ;
+}
+void image_print2(){
 
-	// Printing >>>>>
-	for(i=0;i<n;i++){
-		for(j=0;j<m;j++){
-			printf("%3.1lf, I%3.1lf  ",f_real[i][j],f_img[i][j]);
-		}
-		puts("");
-	}
-	puts("");
-	puts("");
+	int r,c;	
+	for(r=0;r<pic2.width;r++)
+	{
+	  for(c=0;c<pic2.height;c++)
+	  {
+		  glBegin(GL_POINTS);
 
-	for(i=0;i<n;i++){
-		for(j=0;j<m;j++){
-			printf("%3.1lf, I%3.1lf  ",F_real[i][j],F_img[i][j]);
-		}
-		puts("");
-	}
-	puts("");
-	puts("");
+		  float rr=(float)(pic2.pixel(r,c,0));
+		  float gg=(float)(pic2.pixel(r,c,1));
+		  float bb=(float)(pic2.pixel(r,c,2));
 
-	for(i=0;i<n;i++){
-		for(j=0;j<m;j++){
-			printf("%3.1lf, I%3.1lf  ",ff_real[i][j],ff_img[i][j]);
-		}
-		puts("");
+		  glColor3f(rr/255,gg/255.0,bb/255.0);
+
+		  glVertex2d(r,c);
+
+		  glEnd();
+	  }
+	}	
+
+	glTranslatef(0,-250,0);
+
+	for(r=0;r<pic2.width;r++)
+	{
+	  for(c=0;c<pic2.height;c++)
+	  {
+		  glBegin(GL_POINTS);
+
+		  double magn=(F_real1[r][c]*F_real1[r][c]);
+
+		  magn+=(F_img1[r][c]*F_img1[r][c]);
+		  magn=sqrt(magn);
+
+		  float rr=(float)magn;
+		  rr/=255.0;
+
+		  glColor3f(rr,rr,rr);
+		  glVertex2d(r,c);
+
+		  glEnd();
+	  }
 	}
-	puts("");
-	puts("");
+	glTranslatef(0,250,0);
+
+}
+
+void image_print3(){
+	
+	int r,c;	
+	for(r=0;r<pic3.width;r++)
+	{
+	  for(c=0;c<pic3.height;c++)
+	  {
+		  glBegin(GL_POINTS);
+
+		  float rr=(float)(pic3.pixel(r,c,0));
+		  float gg=(float)(pic3.pixel(r,c,1));
+		  float bb=(float)(pic3.pixel(r,c,2));
+
+		  glColor3f(rr/255,gg/255.0,bb/255.0);
+
+		  glVertex2d(r,c);
+
+		  glEnd();
+	  }
+	}	
+
+	glTranslatef(0,-250,0);
+
+	for(r=0;r<pic3.width;r++)
+	{
+	  for(c=0;c<pic3.height;c++)
+	  {
+		  glBegin(GL_POINTS);
+
+		  double magn=(F_real2[r][c]*F_real2[r][c]);
+
+		  magn+=(F_img2[r][c]*F_img2[r][c]);
+		  magn=sqrt(magn);
+
+		  float rr=(float)magn;
+		  rr/=255.0;
+
+		  glColor3f(rr,rr,rr);
+		  glVertex2d(r,c);
+
+		  glEnd();
+	  }
+	}
+	
+	glTranslatef(0,250,0);
+
+
+}
+
+void image_print4(){
+
+	int r,c;	
+	for(r=0;r<pic4.width;r++)
+	{
+	  for(c=0;c<pic4.height;c++)
+	  {
+		  glBegin(GL_POINTS);
+
+		  float rr=(float)(pic4.pixel(r,c,0));
+		  float gg=(float)(pic4.pixel(r,c,1));
+		  float bb=(float)(pic4.pixel(r,c,2));
+
+		  glColor3f(rr/255,gg/255.0,bb/255.0);
+
+		  glVertex2d(r,c);
+
+		  glEnd();
+	  }
+	}
+
+	glTranslatef(0,-250,0);
+
+	for(r=0;r<pic4.width;r++)
+	{
+	  for(c=0;c<pic4.height;c++)
+	  {
+		  glBegin(GL_POINTS);
+
+		  double magn=(F_real3[r][c]*F_real3[r][c]);
+
+		  magn+=(F_img3[r][c]*F_img3[r][c]);
+		  magn=sqrt(magn);
+
+		  float rr=(float)magn;
+		  rr/=255.0;
+
+		  glColor3f(rr,rr,rr);
+		  glVertex2d(r,c);
+
+		  glEnd();
+	  }
+	}
+	glTranslatef(0,250,0);
 
 }

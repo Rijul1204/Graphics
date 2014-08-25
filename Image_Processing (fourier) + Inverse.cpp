@@ -213,7 +213,7 @@ void image_print(){
 
 	glPushMatrix();
     glLoadIdentity();
-	glTranslatef(-512,0,0);
+	glTranslatef(-150,0,0);
 
 	//texture maping of left field
 	int r,c,r1;
@@ -251,7 +251,7 @@ void image_print(){
 
 	glPushMatrix();
     glLoadIdentity();
-	glTranslatef(0,0,0);
+	glTranslatef(10,0,0);
 
 	for(r=0;r<pic.width;r++)
 	{
@@ -272,15 +272,8 @@ void image_print(){
 
 		  if(print_flag && c<30 && r<30){
 			  printf("%.4lf ",rr);
-		  }
-
-		  
-		  
-		    
-		  //if(rr>1.0){
-		  //  glEnd();
-		//	  continue;
-		  //}
+		  }	  
+		
 
 		  glColor3f(rr,rr,rr);
 
@@ -301,7 +294,7 @@ void image_print(){
 
 	glPushMatrix();
     glLoadIdentity();
-	glTranslatef(-512,-512,0);
+	glTranslatef(-10,-150,0);
 
 	for(r=0;r<pic.width;r++)
 	{
@@ -315,13 +308,7 @@ void image_print(){
 
 		  float rr=(float)magn;
 		  
-		  rr/=255.0;
-		  
-		  
-		  //if(rr>1.0){
-		  //  glEnd();
-		//	  continue;
-		  //}
+		  rr/=255.0;		  
 
 		  glColor3f(rr,rr,rr);
 
@@ -342,19 +329,6 @@ void display(void)
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	glC(1.0, 1.0,.5);
-
-	//glBegin( GL_POINTS );
-	//glColor3f(1,0,0);
-
-	int i,j;
-
-	for(i=0;i<=100;i++){
-		for(j=0;j<=100;j++){
-			//glVertex2d( i,j);
-		}
-	}
-
-	//glEnd();
 
 	image_print();
 
@@ -384,27 +358,6 @@ void init(void)
 
 }
 
-
-/*
- * Computes the discrete Fourier transform (DFT) of the given vector.
- * All the array arguments must have the same length.
- */
-void compute_dft(double inreal[], double inimag[], double outreal[], double outimag[], int n) {
-	int k;
-	for (k = 0; k < n; k++) {  /* For each output element */
-		double sumreal = 0;
-		double sumimag = 0;
-		int t;
-		for (t = 0; t < n; t++) {  /* For each input element */
-			double angle = 2 * M_PI * t * k / n;
-			sumreal +=  inreal[t] * cos(angle) + inimag[t] * sin(angle);
-			sumimag += -inreal[t] * sin(angle) + inimag[t] * cos(angle);
-		}
-		outreal[k] = sumreal;
-		outimag[k] = sumimag;
-	}
-}
-
 void fourier_transform();
 
 int main(int argc, char** argv)
@@ -412,7 +365,8 @@ int main(int argc, char** argv)
 	//freopen("out.txt","w",stdout);
 	freopen("in.txt","r",stdin);
 
-    BMPLoad("GRN.BMP",pic);
+
+    BMPLoad("baboon.bmp",pic);
 
 	glutInit(&argc, argv);
 	init ();
@@ -433,8 +387,6 @@ void fourier_transform(){
 
 	int i,j,n,m,k,l;
 
-	//return ;
-
 	// take input . . .  f(i,j)
 
 	n=pic.height;
@@ -444,7 +396,7 @@ void fourier_transform(){
 	{
 	  for(j=0;j<pic.width;j++)
 	  {
-		  float rr=(float)(pic.pixel(j,i,0));
+		  float rr=(float)(pic.pixel(i,j,0));
 		  f_real[i][j]=rr;
 		  f_img[i][j]=0;
 		  if((i+j)%2){
@@ -455,17 +407,15 @@ void fourier_transform(){
 	
 	}
 
-	/// DFT  >>>>>>>>>>>>
-
 	// calculating . . .  P(i,j);
 
 	for(j=0;j<m;j++){
 		int k;
-		for (k = 0; k < n; k++) {  /* For each output element */
+		for (k = 0; k < n; k++) {  
 			double sumreal = 0;
 			double sumimag = 0;
 			int t;
-			for (t = 0; t < n; t++) {  /* For each input element */
+			for (t = 0; t < n; t++) {  
 				double angle = 2 * M_PI * t * k / (double)n;
 				sumreal +=  f_real[t][j] * cos(angle) + f_img[t][j] * sin(angle);
 				sumimag += -f_real[t][j] * sin(angle) + f_img[t][j] * cos(angle);
@@ -480,11 +430,11 @@ void fourier_transform(){
 
 	for(i=0;i<n;i++){
 		int k;
-		for (k = 0; k < m; k++) {  /* For each output element */
+		for (k = 0; k < m; k++) {  
 			double sumreal = 0;
 			double sumimag = 0;
 			int t;
-			for (t = 0; t < m; t++) {  /* For each input element */
+			for (t = 0; t < m; t++) { 
 				double angle = 2 * M_PI * t * k / (double)n;
 				sumreal +=  P_real[i][t] * cos(angle) + P_img[i][t] * sin(angle);
 				sumimag += -P_real[i][t] * sin(angle) + P_img[i][t] * cos(angle);
@@ -494,18 +444,16 @@ void fourier_transform(){
 		}
 		printf("i= %d\n",i);
 	}
-
-	// IDFT >>>>>>>>>>>>>>>>>
-
+	
 	// calculating . . .  P(i,j);
 
 	for(j=0;j<m;j++){
 		int k;
-		for (k = 0; k < n; k++) {  /* For each output element */
+		for (k = 0; k < n; k++) {  
 			double sumreal = 0;
 			double sumimag = 0;
 			int t;
-			for (t = 0; t < n; t++) {  /* For each input element */
+			for (t = 0; t < n; t++) { 
 				double angle = 2 * M_PI * t * k / (double)n;
 				sumreal +=  F_real[t][j] * cos(angle) - F_img[t][j] * sin(angle);
 				sumimag += F_real[t][j] * sin(angle) + F_img[t][j] * cos(angle);
@@ -520,11 +468,11 @@ void fourier_transform(){
 
 	for(i=0;i<n;i++){
 		int k;
-		for (k = 0; k < m; k++) {  /* For each output element */
+		for (k = 0; k < m; k++) { 
 			double sumreal = 0;
 			double sumimag = 0;
 			int t;
-			for (t = 0; t < m; t++) {  /* For each input element */
+			for (t = 0; t < m; t++) {
 				double angle = 2 * M_PI * t * k / (double)n;
 				sumreal +=  P_real[i][t] * cos(angle) - P_img[i][t] * sin(angle);
 				sumimag += P_real[i][t] * sin(angle) + P_img[i][t] * cos(angle);

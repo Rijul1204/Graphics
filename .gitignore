@@ -1,5 +1,6 @@
 .*
 !.gitignore
+*.o
 *.ipr
 *.iws
 *.iml
@@ -14,4 +15,5 @@ out
 *.ncb
 *.opt
 *.plg
+*.exe
 Debug

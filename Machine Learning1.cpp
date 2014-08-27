@@ -114,6 +114,7 @@ int n,m;
 point s,d;
 
 double scale_x=13,scale_y=2000;
+ii theta[10],tmp[10];
 
 struct node{
 	double x[10];
@@ -167,15 +168,47 @@ void show_original(){
 	vector<ii>x,y;
 
 	for(i=1;i<=n;i++){
-		x.push_back(i);
+		x.push_back(nodes[i].x[1]);
 		y.push_back(nodes[i].y);
-		glVertex2f(i,nodes[i].y);
+		//glVertex2f(i,nodes[i].y);
 	}
 
-	//print_curve(x,y);
+	print_curve(x,y);
 	
 	glEnd();
 }
+
+double h_theta(ii theta[],ii x[]){
+
+	double val=0;
+
+	for(int i=0;i<=m;i++){
+		val+=(theta[i]*x[i]);
+	}
+	
+	return val;
+}
+
+void show_predicted(){	
+
+
+	glBegin( GL_POINTS );
+	glColor3f(0,1,0);
+	
+	int i,j;
+	vector<ii>x,y;
+
+	for(i=1;i<=n;i++){		
+		x.push_back(nodes[i].x[1]);
+		y.push_back(h_theta(theta,nodes[i].x));
+		//glVertex2f(i,nodes[i].y);
+	}
+
+	print_curve(x,y);
+	
+	glEnd();
+}
+
 
 
 void show_cost(){
@@ -188,21 +221,21 @@ void show_cost(){
 	glBegin( GL_POINTS );
 	glColor3f(0,0,1);
 
-	double theta0=0,theta1=0;
+	double theta[10]={0};
 
 	vector<ii>x,y;
 	
 	int i,j;
-	for(theta1=150,j=1;theta1<=1550;theta1+=.5,j++){
+	for(theta[1]=20000,j=1;theta[1]<=30000;theta[1]+=.5,j++){
 		
 		double sum=0,y1,y2;
 		for(i=1;i<=n;i++){
-			y1=theta0 + theta1*nodes[i].x[1];
+			y1=h_theta(theta,nodes[i].x);
 			sum+=((y1-nodes[i].y)*(y1-nodes[i].y));
 		}
 		sum/=(2*n);
-		sum=sqrt(sum);
-		sum/=scale_y;
+		//sum=sqrt(sum);
+		//sum/=scale_y;
 		
 		x.push_back(j);
 		y.push_back(sum);
@@ -217,24 +250,10 @@ void show_cost(){
 }
 
 
-
-double h_theta(ii theta[],ii x[]){
-
-	double val=0;
-
-	for(int i=0;i<=m;i++){
-		val+=(theta[i]*x[i]);
-	}
-	
-	return val;
-}
-
-
 void gradient_descent(){
 
-	double alpha=.02;
+	double alpha=.12;
 	int i,j;
-	ii theta[10],tmp[10];
 
 	vector<ii>x,y;
 
@@ -248,8 +267,7 @@ void gradient_descent(){
 	while(1){
 
 		ii y1=theta[0] + theta[1]*(double)-4000;
-		ii y2=theta[0] + theta[1]*(double)4000;	
-			
+		ii y2=theta[0] + theta[1]*(double)4000;				
 	
 		ii cost=0;
 
@@ -321,6 +339,9 @@ void display(void)
 
 	// Gradient - descent 
 	gradient_descent();
+
+	//predicted - data 
+	show_predicted();
 	
 		
 	glFlush();
@@ -364,16 +385,23 @@ int main(int argc, char** argv)
 
 	scanf("%d %d",&n,&m);
 	
+	ii mx[10]={0};		
 	for(i=1;i<=n;i++){
 		nodes[i].x[0]=1;
 		for(j=1;j<=m;j++){
 			scanf("%lf",&nodes[i].x[j]);
-			nodes[i].x[j]/=(double)n;
+			mx[j]=maxi(mx[j],nodes[i].x[j]);
 		}
 		int tmp;
 		scanf("%d",&tmp);
 		nodes[i].y=tmp;
 		//nodes[i].y/=scale_y;
+	}
+
+	for(i=1;i<=n;i++){
+		for(j=1;j<=m;j++){
+			nodes[i].x[j]/=mx[j];
+		}
 	}
 	
 
